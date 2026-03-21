@@ -245,9 +245,7 @@ def generate_digest():
                 </div>
                 <span class="section-meta">{read_time}</span>
             </div>
-            <div class="stories-grid">
-                {stories_html}
-            </div>
+            {stories_html}
         </section>
 """
         nav_pills += f'<a href="#{section_id}" class="nav-pill" style="color:{color};border-color:{color}">{emoji} {section_name}</a>\n'

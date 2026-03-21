@@ -253,14 +253,6 @@ h1 {
     white-space: nowrap;
 }
 
-/* ===== Story Grid ===== */
-.stories-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 14px;
-    align-items: start;
-}
-
 /* ===== Story Cards ===== */
 .story {
     background: var(--card-bg);
@@ -380,12 +372,7 @@ footer {
 }
 
 /* ===== Responsive ===== */
-@media (max-width: 860px) {
-    .stories-grid { grid-template-columns: repeat(2, 1fr); }
-}
-
 @media (max-width: 560px) {
-    .stories-grid { grid-template-columns: 1fr; }
     h1 { font-size: 1.25rem; }
     .container { padding: 24px 16px 100px; }
     .hg-logo { width: 42px; height: 42px; font-size: 0.9rem; border-radius: 11px; }
