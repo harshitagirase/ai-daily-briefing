@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import os
 import re
+import base64
 import datetime
 import feedparser
 import requests
@@ -255,9 +256,9 @@ def generate_digest():
     print("Generating Top 3 TLDR...")
     tldr_html = generate_tldr(client, section_summaries)
 
-    # SVG favicon (HG initials)
+    # SVG favicon (HG initials) — base64 encoded to avoid quote-escaping issues
     favicon_svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" rx="8" fill="#2563eb"/><text x="16" y="22" text-anchor="middle" font-family="system-ui,sans-serif" font-weight="800" font-size="13" fill="white">HG</text></svg>'
-    favicon_uri = f"data:image/svg+xml,{favicon_svg.replace('#', '%23').replace(' ', '%20')}"
+    favicon_uri = "data:image/svg+xml;base64," + base64.b64encode(favicon_svg.encode()).decode()
 
     page = f"""<!DOCTYPE html>
 <html lang="en" data-theme="light">
