@@ -253,21 +253,29 @@ h1 {
     white-space: nowrap;
 }
 
+/* ===== Story Grid ===== */
+.stories-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    align-items: start;
+}
+
 /* ===== Story Cards ===== */
 .story {
     background: var(--card-bg);
     border: 1px solid var(--border);
     border-radius: var(--radius);
-    padding: 20px 22px;
-    margin-bottom: 12px;
+    padding: 18px 20px;
     box-shadow: var(--shadow-sm);
     transition: box-shadow 0.2s, transform 0.15s;
+    display: flex;
+    flex-direction: column;
 }
 .story:hover {
     box-shadow: var(--shadow-md);
-    transform: translateY(-1px);
+    transform: translateY(-2px);
 }
-.story:last-child { margin-bottom: 0; }
 
 .story-title {
     font-size: 1rem;
@@ -372,7 +380,12 @@ footer {
 }
 
 /* ===== Responsive ===== */
-@media (max-width: 640px) {
+@media (max-width: 860px) {
+    .stories-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 560px) {
+    .stories-grid { grid-template-columns: 1fr; }
     h1 { font-size: 1.25rem; }
     .container { padding: 24px 16px 100px; }
     .hg-logo { width: 42px; height: 42px; font-size: 0.9rem; border-radius: 11px; }
