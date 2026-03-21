@@ -100,14 +100,15 @@ Pick the 3-5 most important or interesting stories. For each:
 - Write 2-3 sentences: what happened + why it matters
 - Tone: smart, direct, no fluff
 
-Output only clean HTML using exactly this structure for each story:
+Output ONLY raw HTML — no markdown, no code fences, no backticks, no explanation.
+Use exactly this structure for each story:
 
 <div class="story">
   <h3 class="story-title">Headline here</h3>
   <p class="story-body">What happened. Why it matters.</p>
 </div>
 
-Do not include any text outside the HTML divs."""
+Start your response directly with the first <div> tag. Nothing before or after the HTML."""
 
     response = client.messages.create(
         model="claude-haiku-4-5-20251001",
