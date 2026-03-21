@@ -2,8 +2,11 @@
 import os
 import datetime
 import feedparser
+import requests
 import anthropic
 from zoneinfo import ZoneInfo
+
+HEADERS = {"User-Agent": "Mozilla/5.0 (compatible; MorningBrief/1.0)"}
 
 SECTIONS = {
     "Tech": {
@@ -63,7 +66,8 @@ def fetch_articles(feeds, max_per_feed=6):
     articles = []
     for url in feeds:
         try:
-            feed = feedparser.parse(url)
+            resp = requests.get(url, headers=HEADERS, timeout=10)
+            feed = feedparser.parse(resp.content)
             for entry in feed.entries[:max_per_feed]:
                 title = entry.get("title", "").strip()
                 summary = entry.get("summary", entry.get("description", "")).strip()
