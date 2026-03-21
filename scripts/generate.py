@@ -45,8 +45,10 @@ SECTIONS = {
     "India": {
         "emoji": "🇮🇳",
         "feeds": [
-            "https://feeds.feedburner.com/ndtvnews-india-news",
-            "https://timesofindia.indiatimes.com/rssfeedstopstories.cms",
+            "https://economictimes.indiatimes.com/rssfeedstopstories.cms",
+            "https://www.thehindu.com/feeder/default.rss",
+            "https://indianexpress.com/feed/",
+            "https://www.livemint.com/rss/news",
         ],
     },
     "Science": {
