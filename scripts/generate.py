@@ -75,7 +75,11 @@ def fetch_articles(feeds, max_per_feed=6):
                 import re
                 summary = re.sub(r"<[^>]+>", "", summary)[:400]
                 if title:
-                    articles.append({"title": title, "summary": summary})
+                    articles.append({
+                        "title": title,
+                        "summary": summary,
+                        "link": entry.get("link", ""),
+                    })
         except Exception as e:
             print(f"  Warning: could not fetch {url}: {e}")
     return articles[:12]
@@ -86,26 +90,43 @@ def generate_section_html(client, section_name, articles):
         return "<p>No stories available today.</p>"
 
     articles_text = "\n".join(
-        [f"- {a['title']}: {a['summary']}" for a in articles]
+        [f"- {a['title']}: {a['summary']} [url: {a.get('link', '')}]" for a in articles]
     )
 
-    prompt = f"""You are writing the "{section_name}" section of a daily news digest called "Harshita's Morning Brief".
+    prompt = f"""You are writing the "{section_name}" section of Harshita's Morning Brief — a personal daily digest.
 
-Here are today's raw headlines and summaries from RSS feeds:
+About Harshita (use this as your lens for "why it matters"):
+- Senior Analytics Engineer, 6 years in data, actively moving into product/growth
+- Runs a podcast (Founders Without Borders) interviewing immigrant founders building generational businesses
+- Works at startups, gravitates toward high-growth early-stage companies
+- Building side projects and mini tools to share publicly
+- Tracks finances closely, interested in markets and wealth-building
+- Cares deeply about India tech/business, founder stories, and the data/AI/product intersection
+
+Here are today's raw headlines and summaries:
 
 {articles_text}
 
-Pick the 3-5 most important or interesting stories. For each:
-- Write a punchy, clear headline
-- Write 2-3 sentences: what happened + why it matters
-- Tone: smart, direct, no fluff
+Pick the 2-3 stories that actually matter. Skip noise. If something is a big deal, say so clearly.
+
+For each story write:
+1. A sharp, direct headline
+2. A 2-3 sentence summary of what happened (no fluff, no passive voice)
+3. Why it matters to Harshita specifically — connect it to her work in data/growth/startups/India/building things. Be specific, not generic.
+4. One "so what" sentence — the single most important takeaway, stated bluntly
+5. A link to the best source article (use the actual URL from the feed data)
+
+Tone: Write like a sharp friend who's done the reading. Direct, opinionated, allergic to filler. If something is big, say it's big.
 
 Output ONLY raw HTML — no markdown, no code fences, no backticks, no explanation.
 Use exactly this structure for each story:
 
 <div class="story">
   <h3 class="story-title">Headline here</h3>
-  <p class="story-body">What happened. Why it matters.</p>
+  <div class="story-summary"><p>2-3 sentence summary.</p></div>
+  <p class="story-block"><strong>Why it matters:</strong> Specific reason this matters to Harshita.</p>
+  <p class="story-block story-sowhat"><strong>So what:</strong> Single most important takeaway.</p>
+  <p class="story-source"><a href="URL">Source Name</a></p>
 </div>
 
 Start your response directly with the first <div> tag. Nothing before or after the HTML."""
