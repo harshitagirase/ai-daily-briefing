@@ -53,7 +53,31 @@ h1 {
 .divider {
     border: none;
     border-top: 2.5px solid var(--blue-mid);
-    margin-bottom: 44px;
+    margin-bottom: 28px;
+}
+
+/* Reading lens */
+.lens-box {
+    background: #f8fafc;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px 22px;
+    margin-bottom: 36px;
+}
+
+.lens-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--blue-mid);
+    margin-bottom: 10px;
+}
+
+.lens-body {
+    font-size: 0.92rem;
+    color: var(--text-primary);
+    line-height: 1.65;
 }
 
 /* Jump Nav */
@@ -117,11 +141,69 @@ h1 {
 }
 
 .story-title {
-    font-size: 1.05rem;
+    font-size: 1.08rem;
     font-weight: 700;
+    color: var(--blue-dark);
+    margin-bottom: 12px;
+    line-height: 1.35;
+}
+
+.story-summary {
+    margin-bottom: 14px;
+}
+
+.story-summary p {
     color: var(--text-primary);
-    margin-bottom: 8px;
-    line-height: 1.4;
+    font-size: 0.93rem;
+    line-height: 1.7;
+    margin-bottom: 10px;
+}
+
+.story-summary p:last-child {
+    margin-bottom: 0;
+}
+
+.story-block {
+    font-size: 0.93rem;
+    line-height: 1.65;
+    color: var(--text-primary);
+    margin-bottom: 12px;
+}
+
+.story-block strong {
+    color: var(--text-primary);
+    font-weight: 700;
+}
+
+.story-sowhat {
+    padding-top: 2px;
+}
+
+.story-source {
+    font-size: 0.88rem;
+    line-height: 1.6;
+    color: var(--text-secondary);
+    margin-top: 4px;
+}
+
+.story-source strong {
+    color: var(--text-primary);
+    font-weight: 700;
+}
+
+.story-source a {
+    color: var(--blue-mid);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.story-source a:hover {
+    text-decoration: underline;
+}
+
+.source-note {
+    color: var(--text-secondary);
+    font-weight: 400;
 }
 
 .story-body {
