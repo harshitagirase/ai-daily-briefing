@@ -1,0 +1,148 @@
+:root {
+    --blue-dark: #1a3a6b;
+    --blue-mid: #2563eb;
+    --blue-light: #eff6ff;
+    --text-primary: #111827;
+    --text-secondary: #6b7280;
+    --border: #e5e7eb;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Georgia, sans-serif;
+    background: #ffffff;
+    color: var(--text-primary);
+    line-height: 1.65;
+}
+
+.container {
+    max-width: 820px;
+    margin: 0 auto;
+    padding: 56px 24px;
+}
+
+/* Header */
+.eyebrow {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: var(--blue-mid);
+    text-transform: uppercase;
+    margin-bottom: 14px;
+}
+
+h1 {
+    font-size: 2.4rem;
+    font-weight: 800;
+    color: var(--blue-dark);
+    margin-bottom: 10px;
+    line-height: 1.2;
+}
+
+.date {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    margin-bottom: 36px;
+}
+
+.divider {
+    border: none;
+    border-top: 2.5px solid var(--blue-mid);
+    margin-bottom: 44px;
+}
+
+/* Jump Nav */
+.jump-nav {
+    background: var(--blue-light);
+    border-radius: 14px;
+    padding: 24px 28px;
+    margin-bottom: 56px;
+}
+
+.nav-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: var(--blue-mid);
+    text-transform: uppercase;
+    margin-bottom: 14px;
+}
+
+.nav-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 24px;
+}
+
+.nav-link {
+    color: var(--blue-mid);
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.95rem;
+}
+
+.nav-link:hover {
+    text-decoration: underline;
+}
+
+/* Sections */
+.section {
+    margin-bottom: 60px;
+}
+
+.section-title {
+    font-size: 1.45rem;
+    font-weight: 700;
+    color: var(--blue-dark);
+    border-left: 4px solid var(--blue-mid);
+    padding-left: 16px;
+    margin-bottom: 32px;
+}
+
+/* Stories */
+.story {
+    margin-bottom: 28px;
+    padding-bottom: 28px;
+    border-bottom: 1px solid var(--border);
+}
+
+.story:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.story-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+    line-height: 1.4;
+}
+
+.story-body {
+    color: var(--text-secondary);
+    font-size: 0.93rem;
+    line-height: 1.7;
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    color: var(--text-secondary);
+    font-size: 0.82rem;
+    margin-top: 72px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    h1 { font-size: 1.75rem; }
+    .container { padding: 32px 16px; }
+    .jump-nav { padding: 18px; }
+}

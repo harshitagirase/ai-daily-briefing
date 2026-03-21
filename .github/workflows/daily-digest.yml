@@ -1,0 +1,37 @@
+name: Daily Morning Brief
+
+on:
+  schedule:
+    - cron: '0 15 * * *'  # 7:00 AM PST (UTC-8) / 8:00 AM PDT (UTC-7)
+  workflow_dispatch:       # allows manual trigger from GitHub UI
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install anthropic feedparser
+
+      - name: Generate digest
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: python scripts/generate.py
+
+      - name: Commit and push updated index.html
+        run: |
+          git config user.name "Morning Brief Bot"
+          git config user.email "actions@github.com"
+          git add index.html
+          git diff --staged --quiet || git commit -m "Daily brief: $(date +'%Y-%m-%d')"
+          git push
