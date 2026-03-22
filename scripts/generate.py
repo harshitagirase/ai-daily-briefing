@@ -143,11 +143,26 @@ For each story write:
 
 Tone: Write like a sharp friend who's done the reading. Direct, opinionated, allergic to filler. If something is big, say it's big.
 
+For each story also assign one impact tag from this exact list — pick whichever fits best:
+- <span class="story-tag tag-red">⚠️ Ethical Risk</span>
+- <span class="story-tag tag-red">🚨 Breaking</span>
+- <span class="story-tag tag-orange">⚡ Geopolitical</span>
+- <span class="story-tag tag-green">📈 Macro Growth</span>
+- <span class="story-tag tag-green">💡 Opportunity</span>
+- <span class="story-tag tag-purple">🤖 AI Shift</span>
+- <span class="story-tag tag-blue">👀 Watch This</span>
+- <span class="story-tag tag-amber">💰 Market Signal</span>
+- <span class="story-tag tag-amber">📉 Risk Signal</span>
+- <span class="story-tag tag-teal">🧬 Health Breakthrough</span>
+
 Output ONLY raw HTML — no markdown, no code fences, no backticks, no explanation.
 Use exactly this structure for each story:
 
 <div class="story">
-  <h3 class="story-title">Headline here</h3>
+  <div class="story-header">
+    <h3 class="story-title">Headline here</h3>
+    <span class="story-tag tag-COLOR">EMOJI Label</span>
+  </div>
   <div class="story-summary"><p>2-3 sentence summary.</p></div>
   <p class="story-block"><strong>Why it matters:</strong> Specific reason this matters to Harshita.</p>
   <p class="story-block story-sowhat"><strong>So what:</strong> Single most important takeaway.</p>
