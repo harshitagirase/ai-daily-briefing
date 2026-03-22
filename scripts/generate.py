@@ -152,7 +152,7 @@ For each story also assign one impact tag from this exact list — pick whicheve
 - <span class="story-tag tag-teal">🧬 Health Breakthrough</span>
 
 Output ONLY raw HTML — no markdown, no code fences, no backticks, no explanation.
-Use exactly this structure for each story:
+Use exactly this structure for each story — every element is a div, no p tags at the top level of .story:
 
 <div class="story">
   <div class="story-header">
@@ -160,10 +160,12 @@ Use exactly this structure for each story:
     <span class="story-tag tag-COLOR">EMOJI Label</span>
   </div>
   <div class="story-summary"><p>2-3 sentence summary.</p></div>
-  <p class="story-block"><strong>Why it matters:</strong> Specific reason this matters to Harshita.</p>
-  <p class="story-block story-sowhat"><strong>So what:</strong> Single most important takeaway.</p>
+  <div class="story-block"><strong>Why it matters:</strong> Specific reason this matters to Harshita.</div>
+  <div class="story-block story-sowhat"><strong>So what:</strong> Single most important takeaway.</div>
   <div class="story-source"><a class="read-more" href="URL">Read more →</a></div>
 </div>
+
+CRITICAL: Every block inside .story is a <div>. Do NOT use <p> tags as direct children of <div class="story">. Do NOT add extra </div> tags.
 
 Start your response directly with the first <div> tag. Nothing before or after the HTML."""
 
@@ -172,7 +174,7 @@ Start your response directly with the first <div> tag. Nothing before or after t
         max_tokens=1500,
         messages=[{"role": "user", "content": prompt}],
     )
-    return response.content[0].text.strip()
+    return clean_story_html(response.content[0].text.strip())
 
 
 def generate_tldr(client, section_summaries):
@@ -207,6 +209,13 @@ Start directly with the first <div>. Nothing before or after."""
         messages=[{"role": "user", "content": prompt}],
     )
     return response.content[0].text.strip()
+
+
+def clean_story_html(html):
+    """Remove stray </div> tags that appear after story-block elements before another story-block or story-source."""
+    html = re.sub(r'(</div>)\s*</div>(\s*<div class="story-block)', r'\1\2', html)
+    html = re.sub(r'(</p>)\s*</div>(\s*<(?:div|p)\s)', r'\1\2', html)
+    return html
 
 
 def extract_titles(html):

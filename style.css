@@ -323,8 +323,8 @@ h1 {
     padding: 24px 26px;
     margin-bottom: 16px;
     transition: box-shadow 0.2s, transform 0.15s;
-    display: flex;
-    flex-direction: column;
+    display: block;
+    overflow: hidden;
 }
 [data-theme="dark"] .story { background: #1a2236; }
 .story:hover {
@@ -341,7 +341,7 @@ h1 {
     line-height: 1.4;
 }
 
-.story-summary { margin-bottom: 14px; }
+.story-summary { display: block; margin-bottom: 14px; width: 100%; }
 .story-summary p {
     color: var(--text-secondary);
     font-size: 0.91rem;
@@ -349,11 +349,14 @@ h1 {
 }
 
 .story-block {
+    display: block;
+    width: 100%;
     font-size: 0.91rem;
     line-height: 1.7;
     color: var(--text-secondary);
     margin-bottom: 12px;
 }
+p.story-block, div.story-block { display: block; }
 .story-block strong { color: var(--text-primary); font-weight: 700; }
 
 /* So what callout */
@@ -366,6 +369,8 @@ h1 {
     font-size: 0.91rem;
     line-height: 1.65;
     color: var(--text-primary);
+    display: block;
+    width: 100%;
 }
 [data-theme="dark"] .story-sowhat {
     background: #1c1708;
@@ -375,7 +380,7 @@ h1 {
 [data-theme="dark"] .story-sowhat strong { color: #fbbf24; }
 
 /* Read more button */
-.story-source { margin-top: 14px; }
+.story-source { display: block; margin-top: 14px; width: 100%; }
 
 .read-more {
     display: inline-flex;
