@@ -222,6 +222,59 @@ def extract_titles(html):
     return re.findall(r'class="story-title"[^>]*>([^<]+)<', html)
 
 
+def fetch_sf_weather():
+    """Fetch current weather for San Francisco using Open-Meteo (free, no API key)."""
+    try:
+        resp = requests.get(
+            "https://api.open-meteo.com/v1/forecast",
+            params={
+                "latitude": 37.7749,
+                "longitude": -122.4194,
+                "current": "temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m",
+                "daily": "temperature_2m_max,temperature_2m_min,precipitation_probability_max",
+                "temperature_unit": "fahrenheit",
+                "wind_speed_unit": "mph",
+                "timezone": "America/Los_Angeles",
+                "forecast_days": 1,
+            },
+            timeout=10,
+        )
+        data = resp.json()
+        cur = data["current"]
+        daily = data["daily"]
+
+        # Map WMO weather codes to descriptions + emoji
+        wmo = {
+            0: ("Clear sky", "☀️"), 1: ("Mostly clear", "🌤️"), 2: ("Partly cloudy", "⛅"),
+            3: ("Overcast", "☁️"), 45: ("Foggy", "🌫️"), 48: ("Foggy", "🌫️"),
+            51: ("Light drizzle", "🌦️"), 53: ("Drizzle", "🌦️"), 55: ("Heavy drizzle", "🌦️"),
+            61: ("Light rain", "🌧️"), 63: ("Rain", "🌧️"), 65: ("Heavy rain", "🌧️"),
+            80: ("Light showers", "🌦️"), 81: ("Showers", "🌧️"), 82: ("Heavy showers", "🌧️"),
+        }
+        code = cur.get("weather_code", 0)
+        desc, emoji = wmo.get(code, ("Unknown", "🌡️"))
+        temp = round(cur["temperature_2m"])
+        high = round(daily["temperature_2m_max"][0])
+        low = round(daily["temperature_2m_min"][0])
+        humidity = cur["relative_humidity_2m"]
+        wind = round(cur["wind_speed_10m"])
+        rain_pct = daily["precipitation_probability_max"][0]
+
+        return {
+            "emoji": emoji,
+            "desc": desc,
+            "temp": temp,
+            "high": high,
+            "low": low,
+            "humidity": humidity,
+            "wind": wind,
+            "rain_pct": rain_pct,
+        }
+    except Exception as e:
+        print(f"  Warning: could not fetch weather: {e}")
+        return None
+
+
 def send_email(date_str, tldr_html, time_str):
     api_key = os.environ.get("RESEND_API_KEY")
     if not api_key:
@@ -229,6 +282,25 @@ def send_email(date_str, tldr_html, time_str):
         return
 
     brief_url = "https://harshitagirase.github.io/ai-daily-briefing/"
+
+    # Fetch weather for San Francisco
+    weather = fetch_sf_weather()
+    weather_html = ""
+    if weather:
+        weather_html = f"""
+    <div style="background:#f0f7ff;border-radius:10px;padding:16px 20px;margin-bottom:24px;">
+      <div style="font-size:10px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:#2563eb;margin-bottom:10px;">☀️ San Francisco Weather</div>
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px;">
+        <span style="font-size:2rem;">{weather['emoji']}</span>
+        <div>
+          <div style="font-size:1.3rem;font-weight:800;color:#0f172a;">{weather['temp']}°F</div>
+          <div style="font-size:0.82rem;color:#475569;">{weather['desc']}</div>
+        </div>
+      </div>
+      <div style="font-size:0.8rem;color:#475569;line-height:1.6;">
+        High {weather['high']}°F &middot; Low {weather['low']}°F &middot; 💧 {weather['rain_pct']}% rain &middot; 💨 {weather['wind']} mph
+      </div>
+    </div>"""
 
     email_html = f"""<!DOCTYPE html>
 <html>
@@ -262,6 +334,7 @@ def send_email(date_str, tldr_html, time_str):
     <p>{date_str} &middot; Generated at {time_str}</p>
   </div>
   <div class="body">
+    {weather_html}
     <p class="tldr-label">Today's Top 3</p>
     {tldr_html}
     <hr class="divider">
@@ -276,6 +349,9 @@ def send_email(date_str, tldr_html, time_str):
 </body>
 </html>"""
 
+    # Format short date for subject line (e.g. "March 22")
+    short_date = datetime.datetime.now(ZoneInfo("America/Los_Angeles")).strftime("%B %-d")
+
     resp = requests.post(
         "https://api.resend.com/emails",
         headers={
@@ -285,7 +361,7 @@ def send_email(date_str, tldr_html, time_str):
         json={
             "from": "onboarding@resend.dev",
             "to": "harshitagirase97@gmail.com",
-            "subject": f"☀️ Morning Brief — {date_str}",
+            "subject": f"Hi Harshita! Here's the brief for {short_date}",
             "html": email_html,
         },
     )
