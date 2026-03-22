@@ -320,16 +320,6 @@
 
 </div>
 
-<nav class="floating-nav" id="floatingNav">
-    <a href="#world">🌍 World</a>
-<a href="#tech">🚀 Tech</a>
-<a href="#ai">🤖 AI</a>
-<a href="#india">🇮🇳 India</a>
-<a href="#markets">📈 Markets</a>
-<a href="#health">🧬 Health</a>
-
-</nav>
-
 <script>
 (function() {
     // Dark mode
@@ -346,14 +336,6 @@
         localStorage.setItem('theme', next);
         toggle.textContent = next === 'dark' ? '☀️' : '🌙';
     });
-
-    // Floating nav: show after scrolling past jump nav
-    var jumpNav = document.querySelector('.jump-nav');
-    var floatingNav = document.getElementById('floatingNav');
-    var observer = new IntersectionObserver(function(entries) {
-        floatingNav.classList.toggle('visible', !entries[0].isIntersecting);
-    }, { threshold: 0 });
-    if (jumpNav) observer.observe(jumpNav);
 
     // Staleness indicator
     var generated = new Date('2026-03-22T07:18:48.886509-07:00');

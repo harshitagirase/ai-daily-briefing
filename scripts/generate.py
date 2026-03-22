@@ -449,7 +449,6 @@ def generate_digest():
 
     sections_html = ""
     nav_pills = ""
-    floating_links = ""
     section_summaries = {}
     covered_titles = []
 
@@ -483,7 +482,6 @@ def generate_digest():
         </section>
 """
         nav_pills += f'<a href="#{section_id}" class="nav-pill" style="color:{color};border-color:{color}">{emoji} {section_name}</a>\n'
-        floating_links += f'<a href="#{section_id}">{emoji} {section_name}</a>\n'
 
     print("Generating Top 3 TLDR...")
     tldr_html = generate_tldr(client, section_summaries)
@@ -555,10 +553,6 @@ def generate_digest():
 
 </div>
 
-<nav class="floating-nav" id="floatingNav">
-    {floating_links}
-</nav>
-
 <script>
 (function() {{
     // Dark mode
@@ -575,14 +569,6 @@ def generate_digest():
         localStorage.setItem('theme', next);
         toggle.textContent = next === 'dark' ? '☀️' : '🌙';
     }});
-
-    // Floating nav: show after scrolling past jump nav
-    var jumpNav = document.querySelector('.jump-nav');
-    var floatingNav = document.getElementById('floatingNav');
-    var observer = new IntersectionObserver(function(entries) {{
-        floatingNav.classList.toggle('visible', !entries[0].isIntersecting);
-    }}, {{ threshold: 0 }});
-    if (jumpNav) observer.observe(jumpNav);
 
     // Staleness indicator
     var generated = new Date('{iso_ts}');

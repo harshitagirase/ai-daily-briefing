@@ -43,7 +43,7 @@ body {
 .container {
     max-width: 860px;
     margin: 0 auto;
-    padding: 44px 24px 100px;
+    padding: 44px 24px 48px;
 }
 
 /* ===== Header ===== */
@@ -401,38 +401,7 @@ h1 {
 }
 .read-more:hover { background: var(--blue); color: white; }
 
-/* ===== Floating Nav ===== */
-.floating-nav {
-    position: fixed;
-    bottom: 22px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: var(--text-primary);
-    border-radius: 999px;
-    padding: 9px 20px;
-    display: flex;
-    gap: 14px;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.22);
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.25s;
-    z-index: 100;
-    max-width: calc(100vw - 48px);
-    flex-wrap: wrap;
-    justify-content: center;
-}
-.floating-nav.visible { opacity: 1; pointer-events: all; }
-
-.floating-nav a {
-    color: var(--bg);
-    text-decoration: none;
-    font-size: 0.76rem;
-    font-weight: 600;
-    opacity: 0.7;
-    transition: opacity 0.15s;
-    white-space: nowrap;
-}
-.floating-nav a:hover { opacity: 1; }
+/* Floating nav removed — using sticky jump-nav instead */
 
 /* ===== Footer ===== */
 footer {
@@ -447,9 +416,11 @@ footer {
 /* ===== Responsive ===== */
 @media (max-width: 560px) {
     h1 { font-size: 1.25rem; }
-    .container { padding: 24px 16px 100px; }
+    .container { padding: 24px 16px 48px; }
     .hg-logo { width: 42px; height: 42px; font-size: 0.9rem; border-radius: 11px; }
     .date-badge { display: none; }
-    .story { padding: 16px 18px; }
-    .floating-nav { gap: 10px; padding: 8px 16px; }
+    .story { padding: 18px 16px; }
+    .jump-nav { padding: 8px 16px 10px; margin-left: -16px; margin-right: -16px; padding-left: 16px; padding-right: 16px; }
+    .nav-label { display: none; }
+    .nav-pill { padding: 5px 11px; font-size: 0.75rem; }
 }
