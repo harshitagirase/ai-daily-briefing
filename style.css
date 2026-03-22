@@ -341,7 +341,7 @@ h1 {
     line-height: 1.4;
 }
 
-.story-summary { display: block; margin-bottom: 14px; }
+.story-summary { display: block; margin-bottom: 20px; }
 .story-summary > p,
 .story-summary > div:first-child {
     color: var(--text-secondary);

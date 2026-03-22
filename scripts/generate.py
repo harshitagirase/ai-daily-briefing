@@ -133,7 +133,7 @@ Pick the 2-3 stories that actually matter. Skip noise. If something is a big dea
 For each story write:
 1. A sharp, direct headline
 2. A 2-3 sentence summary of what happened (no fluff, no passive voice)
-3. Why it matters to Harshita specifically — connect it to her work in data/growth/startups/India/building things. Be specific, not generic.
+3. Why it matters — use Harshita's context to CHOOSE what's relevant, but do NOT explicitly reference her personal details, preferences, or activities in the text. Never write things like "You work at startups", "You're building side projects", "For your podcast", "As someone who tracks markets". Instead, explain WHY the story matters in terms of its implications for startups, growth, markets, India tech, or the data/AI/product space — let the relevance speak for itself.
 4. One "so what" sentence — the single most important takeaway, stated bluntly
 5. A "Read more →" link using the actual URL from the feed data
 
