@@ -324,7 +324,6 @@ h1 {
 
 /* ===== Story Cards ===== */
 .story {
-    background: #f9f9f9;
     border: 1px solid var(--border);
     border-radius: var(--radius);
     padding: 24px 26px;
@@ -333,7 +332,22 @@ h1 {
     display: block;
     overflow: hidden;
 }
-[data-theme="dark"] .story { background: #1a2236; }
+
+/* Per-section card tints — light mode */
+#world .story   { background: #eff6ff; border-color: #bfdbfe; }
+#tech .story    { background: #f5f3ff; border-color: #ddd6fe; }
+#ai .story      { background: #ecfeff; border-color: #a5f3fc; }
+#india .story   { background: #fff7ed; border-color: #fed7aa; }
+#markets .story { background: #fffbeb; border-color: #fde68a; }
+#health .story  { background: #f0fdf4; border-color: #bbf7d0; }
+
+/* Per-section card tints — dark mode */
+[data-theme="dark"] #world .story   { background: #172554; border-color: #1e3a8a; }
+[data-theme="dark"] #tech .story    { background: #1e1145; border-color: #2e1065; }
+[data-theme="dark"] #ai .story      { background: #083344; border-color: #155e75; }
+[data-theme="dark"] #india .story   { background: #2a1708; border-color: #431407; }
+[data-theme="dark"] #markets .story { background: #261a04; border-color: #422006; }
+[data-theme="dark"] #health .story  { background: #052e16; border-color: #14532d; }
 .story:hover {
     box-shadow: var(--shadow-md);
     transform: translateY(-1px);
