@@ -402,7 +402,7 @@ def send_email(date_str, tldr_html, time_str):
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
-<body style="font-family:'Open Sans',-apple-system,BlinkMacSystemFont,sans-serif;background:#f4f4f4;margin:0;padding:0;">
+<body style="font-family:'DM Sans',-apple-system,BlinkMacSystemFont,sans-serif;background:#f4f4f4;margin:0;padding:0;">
 <div style="max-width:600px;margin:32px auto;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.08);">
   <div style="background:linear-gradient(135deg,#1e3a8a,#2563eb);padding:28px 32px;">
     <div style="display:inline-block;background:rgba(255,255,255,0.2);color:white;font-weight:800;font-size:1rem;padding:8px 14px;border-radius:10px;letter-spacing:0.04em;margin-bottom:14px;">HG</div>
