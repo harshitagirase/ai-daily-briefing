@@ -248,6 +248,7 @@ h1 {
 .section {
     margin-bottom: 0;
     padding: 40px 0;
+    scroll-margin-top: 60px;
     border-bottom: 1px solid var(--border);
 }
 .section:last-child { border-bottom: none; }
