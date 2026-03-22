@@ -338,7 +338,7 @@ h1 {
 #tech .story    { background: #f5f3ff; border-color: #ddd6fe; }
 #ai .story      { background: #ecfeff; border-color: #a5f3fc; }
 #india .story   { background: #fff7ed; border-color: #fed7aa; }
-#markets .story { background: #fffbeb; border-color: #fde68a; }
+#markets .story { background: #fdf2f8; border-color: #f9a8d4; }
 #health .story  { background: #f0fdf4; border-color: #bbf7d0; }
 
 /* Per-section card tints — dark mode */
@@ -346,7 +346,7 @@ h1 {
 [data-theme="dark"] #tech .story    { background: #1e1145; border-color: #2e1065; }
 [data-theme="dark"] #ai .story      { background: #083344; border-color: #155e75; }
 [data-theme="dark"] #india .story   { background: #2a1708; border-color: #431407; }
-[data-theme="dark"] #markets .story { background: #261a04; border-color: #422006; }
+[data-theme="dark"] #markets .story { background: #2e1228; border-color: #831843; }
 [data-theme="dark"] #health .story  { background: #052e16; border-color: #14532d; }
 .story:hover {
     box-shadow: var(--shadow-md);
