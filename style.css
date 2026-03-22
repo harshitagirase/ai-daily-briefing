@@ -199,11 +199,10 @@ h1 {
     top: 0;
     z-index: 50;
     background: var(--bg);
-    border-top: 1px solid var(--border);
     border-bottom: 1px solid var(--border);
-    padding: 20px 0 14px;
+    padding: 24px 0 16px;
     margin-bottom: 40px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.06);
 }
 
 .nav-label {
