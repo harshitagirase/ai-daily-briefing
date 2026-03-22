@@ -328,6 +328,31 @@ def fetch_sf_weather():
         return None
 
 
+def tldr_html_to_email_table(tldr_html):
+    """Convert div-based TLDR HTML to table-based layout for email clients."""
+    items = re.findall(
+        r'<span class="tldr-num">(\d+)</span>\s*<p class="tldr-text">(.*?)</p>',
+        tldr_html,
+        re.DOTALL,
+    )
+    if not items:
+        return tldr_html  # fallback: return as-is
+
+    rows = ""
+    for num, text in items:
+        rows += f"""
+    <tr>
+      <td style="vertical-align:top;padding-right:12px;padding-bottom:14px;">
+        <div style="width:24px;height:24px;border-radius:50%;background:#2563eb;color:white;font-size:11px;font-weight:800;text-align:center;line-height:24px;">{num}</div>
+      </td>
+      <td style="vertical-align:top;padding-bottom:14px;font-size:14px;color:#0f172a;line-height:1.55;">
+        {text}
+      </td>
+    </tr>"""
+
+    return f'<table cellpadding="0" cellspacing="0" border="0" width="100%">{rows}\n    </table>'
+
+
 def send_email(date_str, tldr_html, time_str):
     api_key = os.environ.get("RESEND_API_KEY")
     if not api_key:
@@ -342,60 +367,47 @@ def send_email(date_str, tldr_html, time_str):
     if weather:
         weather_html = f"""
     <div style="background:#f0f7ff;border-radius:10px;padding:16px 20px;margin-bottom:24px;">
-      <div style="font-size:10px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:#2563eb;margin-bottom:10px;">☀️ San Francisco Weather</div>
-      <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px;">
-        <span style="font-size:2rem;">{weather['emoji']}</span>
-        <div>
-          <div style="font-size:1.3rem;font-weight:800;color:#0f172a;">{weather['temp']}°F</div>
-          <div style="font-size:0.82rem;color:#475569;">{weather['desc']}</div>
-        </div>
-      </div>
+      <div style="font-size:10px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:#2563eb;margin-bottom:10px;">San Francisco Weather</div>
+      <table cellpadding="0" cellspacing="0" border="0" style="margin-bottom:8px;">
+        <tr>
+          <td style="font-size:2rem;padding-right:12px;vertical-align:middle;">{weather['emoji']}</td>
+          <td style="vertical-align:middle;">
+            <div style="font-size:1.3rem;font-weight:800;color:#0f172a;">{weather['temp']}°F</div>
+            <div style="font-size:0.82rem;color:#475569;">{weather['desc']}</div>
+          </td>
+        </tr>
+      </table>
       <div style="font-size:0.8rem;color:#475569;line-height:1.6;">
         High {weather['high']}°F &middot; Low {weather['low']}°F &middot; 💧 {weather['rain_pct']}% rain &middot; 💨 {weather['wind']} mph
       </div>
     </div>"""
+
+    # Convert div-based TLDR to table-based for email compatibility
+    email_tldr = tldr_html_to_email_table(tldr_html)
 
     email_html = f"""<!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<style>
-  body {{ font-family: 'Open Sans', -apple-system, BlinkMacSystemFont, sans-serif; background: #f4f4f4; margin: 0; padding: 0; }}
-  .wrapper {{ max-width: 600px; margin: 32px auto; background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }}
-  .header {{ background: linear-gradient(135deg, #1e3a8a, #2563eb); padding: 28px 32px; }}
-  .hg-logo {{ display: inline-block; background: rgba(255,255,255,0.2); color: white; font-weight: 800; font-size: 1rem; padding: 8px 14px; border-radius: 10px; letter-spacing: 0.04em; margin-bottom: 14px; }}
-  .header h1 {{ color: white; font-size: 1.4rem; font-weight: 800; margin: 0 0 4px; }}
-  .header p {{ color: rgba(255,255,255,0.75); font-size: 0.85rem; margin: 0; }}
-  .body {{ padding: 28px 32px; }}
-  .tldr-label {{ font-size: 10px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #2563eb; margin-bottom: 14px; }}
-  .tldr-item {{ display: flex; gap: 12px; align-items: flex-start; margin-bottom: 12px; }}
-  .tldr-num {{ min-width: 22px; height: 22px; border-radius: 50%; background: #2563eb; color: white; font-size: 0.68rem; font-weight: 800; display: inline-flex; align-items: center; justify-content: center; margin-top: 1px; }}
-  .tldr-text {{ font-size: 0.9rem; color: #0f172a; line-height: 1.55; }}
-  .tldr-text strong {{ font-weight: 700; }}
-  .divider {{ border: none; border-top: 1px solid #e2e8f0; margin: 24px 0; }}
-  .cta {{ text-align: center; padding: 8px 0 4px; }}
-  .cta a {{ display: inline-block; background: #2563eb; color: white; font-weight: 700; font-size: 0.9rem; text-decoration: none; padding: 12px 28px; border-radius: 8px; }}
-  .footer {{ padding: 16px 32px 24px; text-align: center; color: #94a3b8; font-size: 0.75rem; }}
-</style>
 </head>
-<body>
-<div class="wrapper">
-  <div class="header">
-    <div class="hg-logo">HG</div>
-    <h1>☀️ Harshita's Morning Brief</h1>
-    <p>{date_str} &middot; Generated at {time_str}</p>
+<body style="font-family:'Open Sans',-apple-system,BlinkMacSystemFont,sans-serif;background:#f4f4f4;margin:0;padding:0;">
+<div style="max-width:600px;margin:32px auto;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+  <div style="background:linear-gradient(135deg,#1e3a8a,#2563eb);padding:28px 32px;">
+    <div style="display:inline-block;background:rgba(255,255,255,0.2);color:white;font-weight:800;font-size:1rem;padding:8px 14px;border-radius:10px;letter-spacing:0.04em;margin-bottom:14px;">HG</div>
+    <h1 style="color:white;font-size:1.4rem;font-weight:800;margin:0 0 4px;">☀️ Harshita's Morning Brief</h1>
+    <p style="color:rgba(255,255,255,0.75);font-size:0.85rem;margin:0;">{date_str} &middot; Generated at {time_str}</p>
   </div>
-  <div class="body">
+  <div style="padding:28px 32px;">
     {weather_html}
-    <p class="tldr-label">Today's Top 3</p>
-    {tldr_html}
-    <hr class="divider">
-    <div class="cta">
-      <a href="{brief_url}">Read the full brief →</a>
+    <p style="font-size:10px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:#2563eb;margin:0 0 14px;">Today's Top 3</p>
+    {email_tldr}
+    <hr style="border:none;border-top:1px solid #e2e8f0;margin:24px 0;">
+    <div style="text-align:center;padding:8px 0 4px;">
+      <a href="{brief_url}" style="display:inline-block;background:#2563eb;color:white;font-weight:700;font-size:0.9rem;text-decoration:none;padding:12px 28px;border-radius:8px;">Read the full brief →</a>
     </div>
   </div>
-  <div class="footer">
+  <div style="padding:16px 32px 24px;text-align:center;color:#94a3b8;font-size:0.75rem;">
     You're receiving this because you set it up. &middot; <a href="{brief_url}" style="color:#2563eb">View online</a>
   </div>
 </div>
