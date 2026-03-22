@@ -353,10 +353,10 @@ def tldr_html_to_email_table(tldr_html):
     for num, text in items:
         rows += f"""
     <tr>
-      <td style="vertical-align:top;padding-right:12px;padding-bottom:14px;">
-        <div style="width:24px;height:24px;border-radius:50%;background:#2563eb;color:white;font-size:11px;font-weight:800;text-align:center;line-height:24px;">{num}</div>
+      <td style="vertical-align:top;padding-right:14px;padding-bottom:16px;">
+        <div style="width:22px;height:22px;border-radius:50%;background:#1a1a1a;color:#faf9f7;font-size:11px;font-weight:800;text-align:center;line-height:22px;">{num}</div>
       </td>
-      <td style="vertical-align:top;padding-bottom:14px;font-size:14px;color:#0f172a;line-height:1.55;">
+      <td style="vertical-align:top;padding-bottom:16px;font-size:14px;color:#1a1a1a;line-height:1.6;border-bottom:1px solid #e8e5e0;">
         {text}
       </td>
     </tr>"""
@@ -377,18 +377,18 @@ def send_email(date_str, tldr_html, time_str):
     weather_html = ""
     if weather:
         weather_html = f"""
-    <div style="background:#f0f7ff;border-radius:10px;padding:16px 20px;margin-bottom:24px;">
-      <div style="font-size:10px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:#2563eb;margin-bottom:10px;">San Francisco Weather</div>
+    <div style="border:1px solid #e8e5e0;padding:16px 20px;margin-bottom:24px;">
+      <div style="font-size:10px;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:#c41a1a;margin-bottom:10px;">San Francisco Weather</div>
       <table cellpadding="0" cellspacing="0" border="0" style="margin-bottom:8px;">
         <tr>
           <td style="font-size:2rem;padding-right:12px;vertical-align:middle;">{weather['emoji']}</td>
           <td style="vertical-align:middle;">
-            <div style="font-size:1.3rem;font-weight:800;color:#0f172a;">{weather['temp']}°F</div>
-            <div style="font-size:0.82rem;color:#475569;">{weather['desc']}</div>
+            <div style="font-size:1.3rem;font-weight:800;color:#1a1a1a;">{weather['temp']}°F</div>
+            <div style="font-size:0.82rem;color:#4a4a4a;">{weather['desc']}</div>
           </td>
         </tr>
       </table>
-      <div style="font-size:0.8rem;color:#475569;line-height:1.6;">
+      <div style="font-size:0.8rem;color:#4a4a4a;line-height:1.6;">
         High {weather['high']}°F &middot; Low {weather['low']}°F &middot; 💧 {weather['rain_pct']}% rain &middot; 💨 {weather['wind']} mph
       </div>
     </div>"""
@@ -401,25 +401,31 @@ def send_email(date_str, tldr_html, time_str):
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=DM+Serif+Display&display=swap" rel="stylesheet">
 </head>
-<body style="font-family:'DM Sans',-apple-system,BlinkMacSystemFont,sans-serif;background:#f4f4f4;margin:0;padding:0;">
-<div style="max-width:600px;margin:32px auto;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.08);">
-  <div style="background:linear-gradient(135deg,#1e3a8a,#2563eb);padding:28px 32px;">
-    <div style="display:inline-block;background:rgba(255,255,255,0.2);color:white;font-weight:800;font-size:1rem;padding:8px 14px;border-radius:10px;letter-spacing:0.04em;margin-bottom:14px;">HG</div>
-    <h1 style="color:white;font-size:1.4rem;font-weight:800;margin:0 0 4px;">☀️ Harshita's Morning Brief</h1>
-    <p style="color:rgba(255,255,255,0.75);font-size:0.85rem;margin:0;">{date_str} &middot; Generated at {time_str}</p>
+<body style="font-family:'DM Sans',-apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f7;margin:0;padding:0;">
+<div style="max-width:600px;margin:32px auto;background:#faf9f7;">
+  <!-- Header -->
+  <div style="padding:32px 32px 0;">
+    <p style="font-size:11px;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:#c41a1a;margin:0 0 6px;">Morning Brief</p>
+    <h1 style="font-family:'DM Serif Display',Georgia,serif;color:#1a1a1a;font-size:1.8rem;font-weight:400;margin:0 0 8px;letter-spacing:-0.02em;">Harshita's Morning Brief</h1>
+    <p style="color:#8a8a8a;font-size:0.82rem;margin:0;font-style:italic;">{date_str} &middot; Generated at {time_str}</p>
+    <hr style="border:none;border-top:3px double #1a1a1a;margin:20px 0 0;">
   </div>
-  <div style="padding:28px 32px;">
+  <!-- Body -->
+  <div style="padding:24px 32px;">
     {weather_html}
-    <p style="font-size:10px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:#2563eb;margin:0 0 14px;">Today's Top 3</p>
+    <p style="font-family:'DM Serif Display',Georgia,serif;font-size:1.1rem;font-weight:400;color:#1a1a1a;margin:0 0 18px;">Today's Top 3</p>
     {email_tldr}
-    <hr style="border:none;border-top:1px solid #e2e8f0;margin:24px 0;">
+    <hr style="border:none;border-top:1px solid #e8e5e0;margin:24px 0;">
     <div style="text-align:center;padding:8px 0 4px;">
-      <a href="{brief_url}" style="display:inline-block;background:#2563eb;color:white;font-weight:700;font-size:0.9rem;text-decoration:none;padding:12px 28px;border-radius:8px;">Read the full brief →</a>
+      <a href="{brief_url}" style="display:inline-block;background:#1a1a1a;color:#faf9f7;font-weight:700;font-size:0.85rem;text-decoration:none;padding:12px 28px;letter-spacing:0.04em;text-transform:uppercase;">Read the full brief →</a>
     </div>
   </div>
-  <div style="padding:16px 32px 24px;text-align:center;color:#94a3b8;font-size:0.75rem;">
-    You're receiving this because you set it up. &middot; <a href="{brief_url}" style="color:#2563eb">View online</a>
+  <!-- Footer -->
+  <div style="padding:16px 32px 28px;text-align:center;">
+    <hr style="border:none;border-top:3px double #1a1a1a;margin:0 0 16px;">
+    <p style="color:#8a8a8a;font-size:0.72rem;font-style:italic;margin:0;">You're receiving this because you set it up. &middot; <a href="{brief_url}" style="color:#c41a1a;text-decoration:none;">View online</a></p>
   </div>
 </div>
 </body>
