@@ -11,12 +11,12 @@ from zoneinfo import ZoneInfo
 HEADERS = {"User-Agent": "Mozilla/5.0 (compatible; MorningBrief/1.0)"}
 
 SECTION_COLORS = {
-    "World":                    "#2563eb",
-    "Tech & Startups":          "#7c3aed",
-    "AI":                       "#0891b2",
-    "India":                    "#ea580c",
-    "Markets & Portfolio":      "#d97706",
-    "Longevity & Health":       "#16a34a",
+    "World":    "#2563eb",
+    "Tech":     "#7c3aed",
+    "AI":       "#0891b2",
+    "India":    "#ea580c",
+    "Markets":  "#d97706",
+    "Health":   "#16a34a",
 }
 
 SECTIONS = {
@@ -28,7 +28,7 @@ SECTIONS = {
             "https://feeds.npr.org/1001/rss.xml",
         ],
     },
-    "Tech & Startups": {
+    "Tech": {
         "emoji": "🚀",
         "feeds": [
             "https://techcrunch.com/feed/",
@@ -53,7 +53,7 @@ SECTIONS = {
             "https://www.livemint.com/rss/news",
         ],
     },
-    "Markets & Portfolio": {
+    "Markets": {
         "emoji": "📈",
         "feeds": [
             "https://feeds.reuters.com/reuters/businessNews",
@@ -61,7 +61,7 @@ SECTIONS = {
             "https://www.cnbc.com/id/10000664/device/rss/rss.html",
         ],
     },
-    "Longevity & Health": {
+    "Health": {
         "emoji": "🧬",
         "feeds": [
             "https://www.statnews.com/feed/",
