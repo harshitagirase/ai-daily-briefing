@@ -212,42 +212,63 @@ Start directly with the first <div>. Nothing before or after."""
 
 
 def clean_story_html(html):
-    """Fix malformed HTML from Claude: nested divs, missing closes, stray tags."""
+    """Extract content from each story and rebuild with correct div structure.
 
-    # --- Story cards ---
+    Works by splitting on story boundaries, extracting the 5 components
+    (title, tag, summary, why-it-matters, so-what, source), and rebuilding
+    with guaranteed-correct nesting.
+    """
+    # Split into story chunks
+    chunks = re.split(r'(<div class="story">)', html)
+    result = chunks[0]
 
-    # Fix story-block nested inside story-summary (close summary before first story-block)
-    # Handles both <div> and <p> as first child of story-summary
-    html = re.sub(
-        r'(<div class="story-summary">(?:<div>|<p>).*?(?:</div>|</p>))\s*'
-        r'(<div class="story-block")',
-        r'\1</div>\n  \2',
-        html,
-        flags=re.DOTALL,
-    )
+    for i in range(1, len(chunks) - 1, 2):
+        body = chunks[i + 1] if i + 1 < len(chunks) else ""
 
-    # Remove orphaned </div> that was the old story-summary close (now doubled)
-    html = re.sub(
-        r'</div>\s*</div>(\s*<div class="story-source")',
-        r'</div>\1',
-        html,
-    )
+        # Title
+        title = re.search(r'<h3 class="story-title">(.*?)</h3>', body, re.DOTALL)
+        # Impact tag
+        tag = re.search(r'(<span class="story-tag[^"]*">[^<]*</span>)', body)
+        # Summary — get text after story-summary opening, before story-block
+        sm = re.search(
+            r'class="story-summary">\s*(?:<p>|<div>)?(.*?)(?:</p>|</div>)',
+            body, re.DOTALL
+        )
+        # Why it matters
+        why = re.search(
+            r'<strong>Why it matters:</strong>\s*(.*?)(?:</div>|</p>)',
+            body, re.DOTALL
+        )
+        # So what
+        sowhat = re.search(
+            r'<strong>So what:</strong>\s*(.*?)(?:</div>|</p>)',
+            body, re.DOTALL
+        )
+        # Source URL
+        source = re.search(r'(<a class="read-more"[^>]*>Read more →</a>)', body)
 
-    # Ensure every story-source </div> is followed by </div> to close .story
-    # (but not if one is already there)
-    html = re.sub(
-        r'(Read more →</a></div>)\s*\n(?!\s*</div>)(\s*(?:<div class="story">|</section>))',
-        r'\1\n</div>\n\2',
-        html,
-    )
+        rebuilt = '<div class="story">\n'
+        if title and tag:
+            rebuilt += f'  <div class="story-header">\n    <h3 class="story-title">{title.group(1).strip()}</h3>\n    {tag.group(1)}\n  </div>\n'
+        elif title:
+            rebuilt += f'  <h3 class="story-title">{title.group(1).strip()}</h3>\n'
+        if sm and sm.group(1).strip():
+            rebuilt += f'  <div class="story-summary"><p>{sm.group(1).strip()}</p></div>\n'
+        if why and why.group(1).strip():
+            rebuilt += f'  <div class="story-block"><strong>Why it matters:</strong> {why.group(1).strip()}</div>\n'
+        if sowhat and sowhat.group(1).strip():
+            rebuilt += f'  <div class="story-block story-sowhat"><strong>So what:</strong> {sowhat.group(1).strip()}</div>\n'
+        if source:
+            rebuilt += f'  <div class="story-source">{source.group(1)}</div>\n'
+        rebuilt += '</div>\n'
 
-    # Fix stray </strong> used as </div>
-    html = re.sub(r'</strong></div>', r'</div>', html)
+        result += rebuilt
 
-    # Remove stray </div> after standalone </p> before next block element
-    html = re.sub(r'(</p>)\s*</div>(\s*<(?:div|p)\s)', r'\1\2', html)
+    # If odd number of chunks, append the last one
+    if len(chunks) % 2 == 0:
+        result += chunks[-1]
 
-    return html
+    return result
 
 
 def clean_tldr_html(html):
