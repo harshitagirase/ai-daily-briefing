@@ -11,36 +11,37 @@ from zoneinfo import ZoneInfo
 HEADERS = {"User-Agent": "Mozilla/5.0 (compatible; MorningBrief/1.0)"}
 
 SECTION_COLORS = {
-    "Tech":     "#7c3aed",
-    "US":       "#dc2626",
-    "World":    "#2563eb",
-    "India":    "#ea580c",
-    "Science":  "#16a34a",
-    "Health":   "#0891b2",
-    "Business": "#d97706",
+    "World":                    "#2563eb",
+    "Tech & Startups":          "#7c3aed",
+    "AI":                       "#0891b2",
+    "India":                    "#ea580c",
+    "Markets & Portfolio":      "#d97706",
+    "Longevity & Health":       "#16a34a",
 }
 
 SECTIONS = {
-    "Tech": {
-        "emoji": "💻",
+    "World": {
+        "emoji": "🌍",
+        "feeds": [
+            "http://feeds.bbci.co.uk/news/world/rss.xml",
+            "https://feeds.reuters.com/reuters/worldNews",
+            "https://feeds.npr.org/1001/rss.xml",
+        ],
+    },
+    "Tech & Startups": {
+        "emoji": "🚀",
         "feeds": [
             "https://techcrunch.com/feed/",
             "https://www.wired.com/feed/rss",
             "https://feeds.arstechnica.com/arstechnica/index",
         ],
     },
-    "US": {
-        "emoji": "🇺🇸",
+    "AI": {
+        "emoji": "🤖",
         "feeds": [
-            "https://feeds.npr.org/1001/rss.xml",
-            "http://feeds.bbci.co.uk/news/rss.xml",
-        ],
-    },
-    "World": {
-        "emoji": "🌍",
-        "feeds": [
-            "http://feeds.bbci.co.uk/news/world/rss.xml",
-            "https://feeds.reuters.com/reuters/worldNews",
+            "https://www.technologyreview.com/feed/",
+            "https://venturebeat.com/category/ai/feed/",
+            "https://the-decoder.com/feed/",
         ],
     },
     "India": {
@@ -52,25 +53,20 @@ SECTIONS = {
             "https://www.livemint.com/rss/news",
         ],
     },
-    "Science": {
-        "emoji": "🔬",
-        "feeds": [
-            "https://www.sciencedaily.com/rss/all.xml",
-            "https://www.newscientist.com/feed/home/",
-        ],
-    },
-    "Health": {
-        "emoji": "🧠",
-        "feeds": [
-            "https://rss.medicalnewstoday.com/featurednews.xml",
-            "https://www.statnews.com/feed/",
-        ],
-    },
-    "Business": {
+    "Markets & Portfolio": {
         "emoji": "📈",
         "feeds": [
             "https://feeds.reuters.com/reuters/businessNews",
             "https://feeds.bloomberg.com/markets/news.rss",
+            "https://www.cnbc.com/id/10000664/device/rss/rss.html",
+        ],
+    },
+    "Longevity & Health": {
+        "emoji": "🧬",
+        "feeds": [
+            "https://www.statnews.com/feed/",
+            "https://www.sciencedaily.com/rss/health_medicine.xml",
+            "https://longevity.technology/feed/",
         ],
     },
 }
