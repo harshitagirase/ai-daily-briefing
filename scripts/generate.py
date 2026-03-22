@@ -208,13 +208,66 @@ Start directly with the first <div>. Nothing before or after."""
         max_tokens=400,
         messages=[{"role": "user", "content": prompt}],
     )
-    return response.content[0].text.strip()
+    return clean_tldr_html(response.content[0].text.strip())
 
 
 def clean_story_html(html):
-    """Remove stray </div> tags that appear after story-block elements before another story-block or story-source."""
-    html = re.sub(r'(</div>)\s*</div>(\s*<div class="story-block)', r'\1\2', html)
+    """Fix malformed HTML from Claude: nested divs, missing closes, stray tags."""
+
+    # --- Story cards ---
+
+    # Fix story-block nested inside story-summary (close summary before first story-block)
+    # Handles both <div> and <p> as first child of story-summary
+    html = re.sub(
+        r'(<div class="story-summary">(?:<div>|<p>).*?(?:</div>|</p>))\s*'
+        r'(<div class="story-block")',
+        r'\1</div>\n  \2',
+        html,
+        flags=re.DOTALL,
+    )
+
+    # Remove orphaned </div> that was the old story-summary close (now doubled)
+    html = re.sub(
+        r'</div>\s*</div>(\s*<div class="story-source")',
+        r'</div>\1',
+        html,
+    )
+
+    # Ensure every story-source </div> is followed by </div> to close .story
+    # (but not if one is already there)
+    html = re.sub(
+        r'(Read more →</a></div>)\s*\n(?!\s*</div>)(\s*(?:<div class="story">|</section>))',
+        r'\1\n</div>\n\2',
+        html,
+    )
+
+    # Fix stray </strong> used as </div>
+    html = re.sub(r'</strong></div>', r'</div>', html)
+
+    # Remove stray </div> after standalone </p> before next block element
     html = re.sub(r'(</p>)\s*</div>(\s*<(?:div|p)\s)', r'\1\2', html)
+
+    return html
+
+
+def clean_tldr_html(html):
+    """Ensure every tldr-item div is properly closed."""
+    # Fix: <div class="tldr-item">...<p>...</p>\n<div class="tldr-item"> (missing </div>)
+    html = re.sub(
+        r'(</p>)\s*\n(\s*<div class="tldr-item">)',
+        r'\1</div>\n\2',
+        html,
+    )
+    # Also fix if the last item is missing </div> before the parent closes
+    html = re.sub(
+        r'(</p>)\s*\n(\s*</div>)(?!\s*\n\s*</div>)',
+        r'\1</div>\n\2',
+        html,
+    )
+    # Prevent double-closing: </div></div>\n</div> -> </div>\n</div>
+    # Only for tldr context — match </p></div></div> and dedupe
+    html = re.sub(r'(</p>)</div></div>', r'\1</div>', html)
+
     return html
 
 

@@ -341,22 +341,27 @@ h1 {
     line-height: 1.4;
 }
 
-.story-summary { display: block; margin-bottom: 14px; width: 100%; }
-.story-summary p {
+.story-summary { display: block; margin-bottom: 14px; }
+.story-summary > p,
+.story-summary > div:first-child {
     color: var(--text-secondary);
     font-size: 0.91rem;
     line-height: 1.75;
+    margin-bottom: 0;
+}
+
+/* When story-block is nested inside story-summary (malformed HTML), still space it */
+.story-summary > .story-block {
+    margin-top: 14px;
 }
 
 .story-block {
     display: block;
-    width: 100%;
     font-size: 0.91rem;
     line-height: 1.7;
     color: var(--text-secondary);
     margin-bottom: 12px;
 }
-p.story-block, div.story-block { display: block; }
 .story-block strong { color: var(--text-primary); font-weight: 700; }
 
 /* So what callout */
@@ -370,7 +375,6 @@ p.story-block, div.story-block { display: block; }
     line-height: 1.65;
     color: var(--text-primary);
     display: block;
-    width: 100%;
 }
 [data-theme="dark"] .story-sowhat {
     background: #1c1708;
