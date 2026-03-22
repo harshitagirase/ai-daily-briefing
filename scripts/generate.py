@@ -212,63 +212,53 @@ Start directly with the first <div>. Nothing before or after."""
 
 
 def clean_story_html(html):
-    """Extract content from each story and rebuild with correct div structure.
+    """Extract content from each story and rebuild with correct div structure."""
 
-    Works by splitting on story boundaries, extracting the 5 components
-    (title, tag, summary, why-it-matters, so-what, source), and rebuilding
-    with guaranteed-correct nesting.
-    """
-    # Split into story chunks
-    chunks = re.split(r'(<div class="story">)', html)
-    result = chunks[0]
-
-    for i in range(1, len(chunks) - 1, 2):
-        body = chunks[i + 1] if i + 1 < len(chunks) else ""
-
-        # Title
+    def rebuild_one(body):
+        """Given raw HTML for a single story (without outer <div class='story'>),
+        extract components and return clean HTML."""
         title = re.search(r'<h3 class="story-title">(.*?)</h3>', body, re.DOTALL)
-        # Impact tag
         tag = re.search(r'(<span class="story-tag[^"]*">[^<]*</span>)', body)
-        # Summary — get text after story-summary opening, before story-block
         sm = re.search(
             r'class="story-summary">\s*(?:<p>|<div>)?(.*?)(?:</p>|</div>)',
             body, re.DOTALL
         )
-        # Why it matters
         why = re.search(
             r'<strong>Why it matters:</strong>\s*(.*?)(?:</div>|</p>)',
             body, re.DOTALL
         )
-        # So what
         sowhat = re.search(
             r'<strong>So what:</strong>\s*(.*?)(?:</div>|</p>)',
             body, re.DOTALL
         )
-        # Source URL
         source = re.search(r'(<a class="read-more"[^>]*>Read more →</a>)', body)
 
-        rebuilt = '<div class="story">\n'
+        r = '<div class="story">\n'
         if title and tag:
-            rebuilt += f'  <div class="story-header">\n    <h3 class="story-title">{title.group(1).strip()}</h3>\n    {tag.group(1)}\n  </div>\n'
+            r += f'  <div class="story-header">\n    <h3 class="story-title">{title.group(1).strip()}</h3>\n    {tag.group(1)}\n  </div>\n'
         elif title:
-            rebuilt += f'  <h3 class="story-title">{title.group(1).strip()}</h3>\n'
+            r += f'  <h3 class="story-title">{title.group(1).strip()}</h3>\n'
         if sm and sm.group(1).strip():
-            rebuilt += f'  <div class="story-summary"><p>{sm.group(1).strip()}</p></div>\n'
+            r += f'  <div class="story-summary"><p>{sm.group(1).strip()}</p></div>\n'
         if why and why.group(1).strip():
-            rebuilt += f'  <div class="story-block"><strong>Why it matters:</strong> {why.group(1).strip()}</div>\n'
+            r += f'  <div class="story-block"><strong>Why it matters:</strong> {why.group(1).strip()}</div>\n'
         if sowhat and sowhat.group(1).strip():
-            rebuilt += f'  <div class="story-block story-sowhat"><strong>So what:</strong> {sowhat.group(1).strip()}</div>\n'
+            r += f'  <div class="story-block story-sowhat"><strong>So what:</strong> {sowhat.group(1).strip()}</div>\n'
         if source:
-            rebuilt += f'  <div class="story-source">{source.group(1)}</div>\n'
-        rebuilt += '</div>\n'
+            r += f'  <div class="story-source">{source.group(1)}</div>\n'
+        r += '</div>'
+        return r
 
-        result += rebuilt
-
-    # If odd number of chunks, append the last one
-    if len(chunks) % 2 == 0:
-        result += chunks[-1]
-
-    return result
+    # Find all story blocks and replace them in-place
+    # Pattern: <div class="story"> ... up to next <div class="story"> or </section>
+    pattern = r'<div class="story">(.+?)(?=<div class="story">|</section>)'
+    html = re.sub(
+        pattern,
+        lambda m: rebuild_one(m.group(1)),
+        html,
+        flags=re.DOTALL,
+    )
+    return html
 
 
 def clean_tldr_html(html):
