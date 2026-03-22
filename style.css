@@ -337,7 +337,7 @@ h1 {
 #world .story   { background: #eff6ff; border-color: #bfdbfe; }
 #tech .story    { background: #f5f3ff; border-color: #ddd6fe; }
 #ai .story      { background: #ecfeff; border-color: #a5f3fc; }
-#india .story   { background: #fff7ed; border-color: #fed7aa; }
+#india .story   { background: #fef2f2; border-color: #fecaca; }
 #markets .story { background: #fdf2f8; border-color: #f9a8d4; }
 #health .story  { background: #f0fdf4; border-color: #bbf7d0; }
 
@@ -345,7 +345,7 @@ h1 {
 [data-theme="dark"] #world .story   { background: #172554; border-color: #1e3a8a; }
 [data-theme="dark"] #tech .story    { background: #1e1145; border-color: #2e1065; }
 [data-theme="dark"] #ai .story      { background: #083344; border-color: #155e75; }
-[data-theme="dark"] #india .story   { background: #2a1708; border-color: #431407; }
+[data-theme="dark"] #india .story   { background: #2a1215; border-color: #450a0a; }
 [data-theme="dark"] #markets .story { background: #2e1228; border-color: #831843; }
 [data-theme="dark"] #health .story  { background: #052e16; border-color: #14532d; }
 .story:hover {
