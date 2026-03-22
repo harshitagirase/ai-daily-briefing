@@ -505,7 +505,7 @@ def generate_digest():
     email_tldr = tldr_html  # save before embedding in page
 
     # SVG favicon (HG initials) — base64 encoded to avoid quote-escaping issues
-    favicon_svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" rx="8" fill="#2563eb"/><text x="16" y="22" text-anchor="middle" font-family="system-ui,sans-serif" font-weight="800" font-size="13" fill="white">HG</text></svg>'
+    favicon_svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" rx="4" fill="#1a1a1a"/><text x="16" y="21" text-anchor="middle" font-family="Georgia,serif" font-weight="400" font-size="14" fill="#faf9f7">HG</text></svg>'
     favicon_uri = "data:image/svg+xml;base64," + base64.b64encode(favicon_svg.encode()).decode()
 
     page = f"""<!DOCTYPE html>
