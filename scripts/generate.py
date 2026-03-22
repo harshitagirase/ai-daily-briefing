@@ -305,7 +305,7 @@ def generate_digest():
 
     for section_name, config in SECTIONS.items():
         emoji = config["emoji"]
-        section_id = section_name.lower()
+        section_id = section_name.lower().replace(" & ", "-").replace(" ", "-")
         color = SECTION_COLORS[section_name]
 
         print(f"Fetching {section_name}...")
