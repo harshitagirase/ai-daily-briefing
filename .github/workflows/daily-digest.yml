@@ -2,7 +2,7 @@ name: Daily Morning Brief
 
 on:
   schedule:
-    - cron: '0 15 * * *'  # 7:00 AM PST (UTC-8) / 8:00 AM PDT (UTC-7)
+    - cron: '0 14 * * *'  # 6:00 AM PST (UTC-8) / 7:00 AM PDT (UTC-7)
   workflow_dispatch:       # allows manual trigger from GitHub UI
 
 jobs:
@@ -26,6 +26,7 @@ jobs:
       - name: Generate digest
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
         run: python scripts/generate.py
 
       - name: Commit and push updated index.html

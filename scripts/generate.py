@@ -217,6 +217,79 @@ def extract_titles(html):
     return re.findall(r'class="story-title"[^>]*>([^<]+)<', html)
 
 
+def send_email(date_str, tldr_html, time_str):
+    api_key = os.environ.get("RESEND_API_KEY")
+    if not api_key:
+        print("No RESEND_API_KEY — skipping email")
+        return
+
+    brief_url = "https://harshitagirase.github.io/ai-daily-briefing/"
+
+    email_html = f"""<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  body {{ font-family: 'Open Sans', -apple-system, BlinkMacSystemFont, sans-serif; background: #f4f4f4; margin: 0; padding: 0; }}
+  .wrapper {{ max-width: 600px; margin: 32px auto; background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }}
+  .header {{ background: linear-gradient(135deg, #1e3a8a, #2563eb); padding: 28px 32px; }}
+  .hg-logo {{ display: inline-block; background: rgba(255,255,255,0.2); color: white; font-weight: 800; font-size: 1rem; padding: 8px 14px; border-radius: 10px; letter-spacing: 0.04em; margin-bottom: 14px; }}
+  .header h1 {{ color: white; font-size: 1.4rem; font-weight: 800; margin: 0 0 4px; }}
+  .header p {{ color: rgba(255,255,255,0.75); font-size: 0.85rem; margin: 0; }}
+  .body {{ padding: 28px 32px; }}
+  .tldr-label {{ font-size: 10px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #2563eb; margin-bottom: 14px; }}
+  .tldr-item {{ display: flex; gap: 12px; align-items: flex-start; margin-bottom: 12px; }}
+  .tldr-num {{ min-width: 22px; height: 22px; border-radius: 50%; background: #2563eb; color: white; font-size: 0.68rem; font-weight: 800; display: inline-flex; align-items: center; justify-content: center; margin-top: 1px; }}
+  .tldr-text {{ font-size: 0.9rem; color: #0f172a; line-height: 1.55; }}
+  .tldr-text strong {{ font-weight: 700; }}
+  .divider {{ border: none; border-top: 1px solid #e2e8f0; margin: 24px 0; }}
+  .cta {{ text-align: center; padding: 8px 0 4px; }}
+  .cta a {{ display: inline-block; background: #2563eb; color: white; font-weight: 700; font-size: 0.9rem; text-decoration: none; padding: 12px 28px; border-radius: 8px; }}
+  .footer {{ padding: 16px 32px 24px; text-align: center; color: #94a3b8; font-size: 0.75rem; }}
+</style>
+</head>
+<body>
+<div class="wrapper">
+  <div class="header">
+    <div class="hg-logo">HG</div>
+    <h1>☀️ Harshita's Morning Brief</h1>
+    <p>{date_str} &middot; Generated at {time_str}</p>
+  </div>
+  <div class="body">
+    <p class="tldr-label">Today's Top 3</p>
+    {tldr_html}
+    <hr class="divider">
+    <div class="cta">
+      <a href="{brief_url}">Read the full brief →</a>
+    </div>
+  </div>
+  <div class="footer">
+    You're receiving this because you set it up. &middot; <a href="{brief_url}" style="color:#2563eb">View online</a>
+  </div>
+</div>
+</body>
+</html>"""
+
+    resp = requests.post(
+        "https://api.resend.com/emails",
+        headers={
+            "Authorization": f"Bearer {api_key}",
+            "Content-Type": "application/json",
+        },
+        json={
+            "from": "onboarding@resend.dev",
+            "to": "harshitagirase97@gmail.com",
+            "subject": f"☀️ Morning Brief — {date_str}",
+            "html": email_html,
+        },
+    )
+    if resp.status_code in (200, 201):
+        print("✅ Email sent")
+    else:
+        print(f"❌ Email failed ({resp.status_code}): {resp.text}")
+
+
 def generate_digest():
     api_key = os.environ.get("ANTHROPIC_API_KEY")
     if not api_key:
@@ -268,6 +341,7 @@ def generate_digest():
 
     print("Generating Top 3 TLDR...")
     tldr_html = generate_tldr(client, section_summaries)
+    email_tldr = tldr_html  # save before embedding in page
 
     # SVG favicon (HG initials) — base64 encoded to avoid quote-escaping issues
     favicon_svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" rx="8" fill="#2563eb"/><text x="16" y="22" text-anchor="middle" font-family="system-ui,sans-serif" font-weight="800" font-size="13" fill="white">HG</text></svg>'
@@ -390,6 +464,7 @@ def generate_digest():
         f.write(page)
 
     print("✅ Saved index.html")
+    send_email(date_str, email_tldr, time_str)
 
 
 if __name__ == "__main__":
