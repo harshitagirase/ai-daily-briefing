@@ -315,10 +315,10 @@
         label.textContent = 'Fresh — generated at 9:04 AM PDT';
     } else if (hoursAgo < 12) {
         dot.className = 'freshness-dot stale';
-        label.textContent = Math.floor(hoursAgo) + 'h ago — updates tomorrow at 6 AM PT';
+        label.textContent = Math.floor(hoursAgo) + 'h ago — updates daily at 6 AM PT';
     } else {
         dot.className = 'freshness-dot very-stale';
-        label.textContent = 'Yesterday’s edition — new one coming at 6 AM PT';
+        label.textContent = ‘Yesterday\u2019s edition — updates daily at 6 AM PT’;
     }
 })();
 </script>

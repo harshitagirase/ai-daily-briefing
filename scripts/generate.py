@@ -592,10 +592,10 @@ def generate_digest():
         label.textContent = 'Fresh — generated at {time_str}';
     }} else if (hoursAgo < 12) {{
         dot.className = 'freshness-dot stale';
-        label.textContent = Math.floor(hoursAgo) + 'h ago — updates tomorrow at 6 AM PT';
+        label.textContent = Math.floor(hoursAgo) + 'h ago — updates daily at 6 AM PT';
     }} else {{
         dot.className = 'freshness-dot very-stale';
-        label.textContent = 'Yesterday\u2019s edition — new one coming at 6 AM PT';
+        label.textContent = 'Yesterday\u2019s edition — updates daily at 6 AM PT';
     }}
 }})();
 </script>
