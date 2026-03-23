@@ -81,22 +81,28 @@ HARSHITA_LENS = """About Harshita (use this lens for "why it matters"):
 
 
 def fetch_articles(feeds, max_per_feed=6):
+    from calendar import timegm
     articles = []
-    cutoff = datetime.datetime.now(datetime.timezone.utc) - datetime.timedelta(hours=48)
+    now = datetime.datetime.now(datetime.timezone.utc)
+    cutoff_24h = now - datetime.timedelta(hours=24)
+    cutoff_48h = now - datetime.timedelta(hours=48)
     for url in feeds:
         try:
             resp = requests.get(url, headers=HEADERS, timeout=10)
             feed = feedparser.parse(resp.content)
             for entry in feed.entries[:max_per_feed]:
-                # Filter out articles older than 48 hours
                 published = entry.get("published_parsed") or entry.get("updated_parsed")
                 if published:
-                    from calendar import timegm
                     entry_time = datetime.datetime.fromtimestamp(
                         timegm(published), tz=datetime.timezone.utc
                     )
-                    if entry_time < cutoff:
+                    # Hard cutoff: skip anything older than 48 hours
+                    if entry_time < cutoff_48h:
                         continue
+                    is_recent = entry_time >= cutoff_24h
+                else:
+                    # No date info — treat as possibly stale, deprioritize
+                    is_recent = False
                 title = entry.get("title", "").strip()
                 summary = entry.get("summary", entry.get("description", "")).strip()
                 summary = re.sub(r"<[^>]+>", "", summary)[:400]
@@ -105,9 +111,12 @@ def fetch_articles(feeds, max_per_feed=6):
                         "title": title,
                         "summary": summary,
                         "link": entry.get("link", ""),
+                        "recent": is_recent,
                     })
         except Exception as e:
             print(f"  Warning: could not fetch {url}: {e}")
+    # Sort: recent (last 24h) articles first, then older ones
+    articles.sort(key=lambda a: (not a["recent"],))
     return articles[:12]
 
 
@@ -123,7 +132,7 @@ def generate_section_html(client, section_name, articles, covered_titles):
         return "<p>No stories available today.</p>"
 
     articles_text = "\n".join(
-        [f"- {a['title']}: {a['summary']} [url: {a.get('link', '')}]" for a in articles]
+        [f"- {'[LAST 24H] ' if a.get('recent') else '[OLDER] '}{a['title']}: {a['summary']} [url: {a.get('link', '')}]" for a in articles]
     )
 
     dedup_note = ""
@@ -138,7 +147,7 @@ Here are today's raw headlines and summaries:
 
 {articles_text}
 {dedup_note}
-Pick the 2-3 stories that actually matter. Skip noise. If something is a big deal, say so clearly.
+Pick the 2-3 stories that actually matter. STRONGLY prefer stories marked [LAST 24H]. Only use [OLDER] stories if there aren't enough recent ones or if they're genuinely significant. Skip noise. If something is a big deal, say so clearly.
 
 For each story write:
 1. A sharp, direct headline
