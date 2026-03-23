@@ -82,11 +82,21 @@ HARSHITA_LENS = """About Harshita (use this lens for "why it matters"):
 
 def fetch_articles(feeds, max_per_feed=6):
     articles = []
+    cutoff = datetime.datetime.now(datetime.timezone.utc) - datetime.timedelta(hours=48)
     for url in feeds:
         try:
             resp = requests.get(url, headers=HEADERS, timeout=10)
             feed = feedparser.parse(resp.content)
             for entry in feed.entries[:max_per_feed]:
+                # Filter out articles older than 48 hours
+                published = entry.get("published_parsed") or entry.get("updated_parsed")
+                if published:
+                    from calendar import timegm
+                    entry_time = datetime.datetime.fromtimestamp(
+                        timegm(published), tz=datetime.timezone.utc
+                    )
+                    if entry_time < cutoff:
+                        continue
                 title = entry.get("title", "").strip()
                 summary = entry.get("summary", entry.get("description", "")).strip()
                 summary = re.sub(r"<[^>]+>", "", summary)[:400]
