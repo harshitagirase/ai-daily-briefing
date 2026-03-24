@@ -152,7 +152,7 @@ Pick the 2-3 stories that actually matter. STRONGLY prefer stories marked [LAST 
 For each story write:
 1. A sharp, direct headline
 2. A 2-3 sentence summary of what happened (no fluff, no passive voice)
-3. Why it matters — use Harshita's context to CHOOSE what's relevant, but do NOT explicitly reference her personal details, preferences, or activities in the text. Never write things like "You work at startups", "You're building side projects", "For your podcast", "As someone who tracks markets". Instead, explain WHY the story matters in terms of its implications for startups, growth, markets, India tech, or the data/AI/product space — let the relevance speak for itself.
+3. Why it matters — use the reader context to CHOOSE what's relevant, but NEVER mention the reader by name, and NEVER use "you", "your", "her", "Harshita", or any direct address. Write in an impersonal editorial voice. Explain WHY the story matters in terms of its implications for startups, growth, markets, India tech, or the data/AI/product space — let the relevance speak for itself.
 4. One "so what" sentence — the single most important takeaway, stated bluntly
 5. A "Read more →" link using the actual URL from the feed data
 
@@ -209,9 +209,9 @@ def generate_tldr(client, section_summaries):
 Here are today's stories across all sections:
 {all_stories}
 
-Pick the 3 most important stories overall — the ones with the biggest real-world impact or most relevance to Harshita.
+Pick the 3 most important stories overall — the ones with the biggest real-world impact or most relevance to the reader.
 
-For each, write one punchy sentence: what happened and why it matters to Harshita specifically.
+For each, write one punchy sentence: what happened and why it matters. NEVER use the reader's name or refer to them directly (no "you", "your", "Harshita", "her"). Write in an impersonal, editorial voice.
 
 Output ONLY raw HTML — no markdown, no code fences, no backticks, no explanation.
 Use exactly this structure (3 items):
