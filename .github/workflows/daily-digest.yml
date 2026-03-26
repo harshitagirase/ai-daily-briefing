@@ -7,7 +7,7 @@ on:
   workflow_dispatch:       # allows manual trigger from GitHub UI
 
 concurrency:
-  group: daily-digest-${{ github.event.schedule || 'manual' }}
+  group: daily-digest
   cancel-in-progress: false
 
 jobs:
@@ -17,30 +17,18 @@ jobs:
       contents: write
 
     steps:
-      - name: Deduplicate scheduled runs
-        id: dedup
-        run: |
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            echo "Manual trigger, proceeding."
-            echo "skip=false" >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
-          # Check if a digest was already committed today (Pacific time)
-          # We'll do this after checkout, so for now just proceed
-          echo "skip=false" >> "$GITHUB_OUTPUT"
-
       - name: Checkout repo
         uses: actions/checkout@v4
         with:
-          fetch-depth: 5
+          fetch-depth: 10
 
       - name: Check if already ran today
         if: github.event_name != 'workflow_dispatch'
         id: already_ran
         run: |
           TODAY=$(TZ='America/Los_Angeles' date +'%Y-%m-%d')
-          if git log --oneline --since="$TODAY" --grep="Daily brief: $TODAY" | grep -q .; then
-            echo "Already generated today's brief, skipping."
+          if git log --oneline -10 | grep -q "Daily brief: $TODAY"; then
+            echo "Already generated today's brief ($TODAY), skipping."
             echo "skip=true" >> "$GITHUB_OUTPUT"
           else
             echo "No brief yet for $TODAY, proceeding."
@@ -70,5 +58,5 @@ jobs:
           git config user.name "Morning Brief Bot"
           git config user.email "actions@github.com"
           git add index.html
-          git diff --staged --quiet || git commit -m "Daily brief: $(date +'%Y-%m-%d')"
+          git diff --staged --quiet || git commit -m "Daily brief: $(TZ='America/Los_Angeles' date +'%Y-%m-%d')"
           git push
